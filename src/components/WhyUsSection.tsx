@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const WhyUsSection = () => {
   return (
-    <section className="py-20">
+    <section className="py-12">
       <motion.div 
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 50 }}
@@ -18,12 +18,12 @@ const WhyUsSection = () => {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
           >
-            <h2 className="font-cormorant text-4xl sm:text-4xl font-bold text-luxury-charcoal mb-6">Why Choose Us</h2>
-            <p className="font-poppins text-luxury-charcoal mb-6 leading-relaxed">
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-luxury-charcoal mb-6">Why Choose Us</h2>
+            <p className="font-poppins sm:text-large text-luxury-charcoal mb-6 leading-relaxed">
               Chandigarh isn't just a city, it's a statement. Every home, office, and building here has a rhythm. 
               We design spaces that don't just fit into the city, but stand out in it.
             </p>
-            <p className="font-poppins text-luxury-charcoal mb-6 leading-relaxed">
+            <p className="font-poppins sm:text-large text-luxury-charcoal mb-6 leading-relaxed">
               When you walk into a space we've designed, you don't just see walls.
               <br />
               You feel the light spill across open glass.
@@ -32,7 +32,7 @@ const WhyUsSection = () => {
               <br />
               You sense the calm of design done right.
             </p>
-            <p className="font-poppins text-luxury-charcoal leading-relaxed">
+            <p className="font-poppins italic sm:text-large text-luxury-charcoal leading-relaxed">
               This isn't architecture. This is living art.
             </p>
           </motion.div>

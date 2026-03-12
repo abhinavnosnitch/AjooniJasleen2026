@@ -7,6 +7,8 @@ interface LazyImageProps {
   className?: string;
   loading?: 'lazy' | 'eager';
   placeholder?: string;
+  maintainAspectRatio?: boolean;
+  objectFit?: 'cover' | 'contain' | 'fill' | 'none';
 }
 
 const LazyImage: React.FC<LazyImageProps> = ({
@@ -15,10 +17,13 @@ const LazyImage: React.FC<LazyImageProps> = ({
   alt,
   className = '',
   loading = 'lazy',
-  placeholder = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PC9zdmc+'
+  placeholder = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PC9zdmc+',
+  maintainAspectRatio = false,
+  objectFit = 'cover'
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState<number | null>(null);
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
@@ -39,24 +44,32 @@ const LazyImage: React.FC<LazyImageProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  const handleLoad = () => {
+  const handleLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     setIsLoaded(true);
+
+    if (maintainAspectRatio && e.currentTarget) {
+      const img = e.currentTarget;
+      const ratio = img.naturalWidth / img.naturalHeight;
+      setAspectRatio(ratio);
+    }
   };
 
+  const containerStyle = maintainAspectRatio && aspectRatio
+    ? { paddingBottom: `${(1 / aspectRatio) * 100}%` }
+    : {};
+
   return (
-    <div className={`relative overflow-hidden ${className}`}>
-      {/* Placeholder */}
+    <div className={`relative overflow-hidden w-full ${maintainAspectRatio ? '' : 'h-full'} ${className}`} style={maintainAspectRatio ? containerStyle : undefined}>
       {!isLoaded && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-          <div className="w-12 h-12 border-2 border-gray-300 border-t-teal-600 rounded-full animate-spin"></div>
+        <div className={`${maintainAspectRatio ? 'absolute inset-0' : 'w-full h-full'} bg-gray-200 animate-pulse flex items-center justify-center`}>
+          <div className="w-12 h-12 border-2 border-transparent border-t-luxury-gold rounded-full animate-spin"></div>
         </div>
       )}
-      
-      {/* Actual Image */}
-      <picture>
+
+      <picture className={maintainAspectRatio ? 'absolute inset-0 w-full h-full' : 'w-full h-full'}>
         {srcMobile && (
-          <source 
-            media="(max-width: 768px)" 
+          <source
+            media="(max-width: 768px)"
             srcSet={isInView ? srcMobile : placeholder}
           />
         )}
@@ -66,7 +79,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
           alt={alt}
           loading={loading}
           onLoad={handleLoad}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${
+          className={`w-full h-full object-${objectFit} transition-opacity duration-300 ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
         />

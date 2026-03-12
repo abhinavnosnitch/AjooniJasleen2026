@@ -11,7 +11,7 @@ const MobileHeroHeading = () => {
         <motion.h2
           className="font-cormorant mobile-hero-heading-size mb-2 tracking-tight text-luxury-charcoal"
           style={{
-            fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
+            fontSize: 'clamp(3rem, 8vw, 4.5rem)',
             lineHeight: '1.1',
             fontWeight: 600,
             letterSpacing: '-0.02em'
@@ -27,7 +27,7 @@ const MobileHeroHeading = () => {
         <motion.h2
           className="font-cormorant mobile-hero-heading-size mb-6 tracking-tight text-luxury-gold"
           style={{
-            fontSize: 'clamp(2.5rem, 8vw, 4.5rem)',
+            fontSize: 'clamp(3rem, 8vw, 4.5rem)',
             lineHeight: '1.1',
             fontWeight: 600,
             letterSpacing: '-0.02em'
@@ -47,7 +47,8 @@ const MobileHeroHeading = () => {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         >
-          Architecture that speaks your story before you say a word.
+          Architecture that speaks your story
+          <br/>before you say a word.
         </motion.p>
       </div>
     </section>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 interface DropdownItem {
   name: string;
   path: string;
+  isExternal?: boolean;
 }
 
 interface DropdownMenuProps {
@@ -107,7 +108,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ isOpen, items = [], onClose
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 z-50"
+          className="absolute top-full left-0 mt-3 w-64 z-50"
           role="menu"
           aria-orientation="vertical"
         >
@@ -142,23 +143,39 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({ isOpen, items = [], onClose
                     variants={itemVariants}
                     custom={index}
                   >
-                    <Link
-                      to={item.path}
-                      className="group relative block px-4 py-3 mx-2 my-1 text-sm font-medium text-luxury-charcoal rounded-lg transition-all duration-300 ease-out hover:text-luxury-gold focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 focus:ring-inset"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        onClose();
-                      }}
-                      role="menuitem"
-                    >
-                      <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-luxury-gold/0 via-luxury-gold/5 to-luxury-gold/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
+                    {item.isExternal ? (
+                      <a
+                        href={item.path}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative block px-4 py-3 mx-2 my-1 text-sm font-medium text-luxury-charcoal rounded-lg transition-all duration-300 ease-out hover:text-luxury-gold focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 focus:ring-inset"
+                        onClick={onClose}
+                        role="menuitem"
+                      >
+                        <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-luxury-gold/0 via-luxury-gold/5 to-luxury-gold/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
 
-                      <span className="absolute left-2 top-1/2 -translate-y-1/2 w-1 h-0 bg-luxury-gold rounded-full group-hover:h-6 transition-all duration-300 ease-out"></span>
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 w-1 h-0 bg-luxury-gold rounded-full group-hover:h-6 transition-all duration-300 ease-out"></span>
 
-                      <span className="relative z-10 block font-poppins tracking-wide">{item.name}</span>
+                        <span className="relative z-10 block font-poppins tracking-wide">{item.name}</span>
 
-                      <span className="absolute bottom-2 left-4 right-4 h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center"></span>
-                    </Link>
+                        <span className="absolute bottom-2 left-4 right-4 h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center"></span>
+                      </a>
+                    ) : (
+                      <Link
+                        to={item.path}
+                        className="group relative block px-4 py-3 mx-2 my-1 text-sm font-medium text-luxury-charcoal rounded-lg transition-all duration-300 ease-out hover:text-luxury-gold focus:outline-none focus:ring-2 focus:ring-luxury-gold/50 focus:ring-inset"
+                        onClick={onClose}
+                        role="menuitem"
+                      >
+                        <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-luxury-gold/0 via-luxury-gold/5 to-luxury-gold/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"></span>
+
+                        <span className="absolute left-2 top-1/2 -translate-y-1/2 w-1 h-0 bg-luxury-gold rounded-full group-hover:h-6 transition-all duration-300 ease-out"></span>
+
+                        <span className="relative z-10 block font-poppins tracking-wide">{item.name}</span>
+
+                        <span className="absolute bottom-2 left-4 right-4 h-px bg-gradient-to-r from-transparent via-luxury-gold/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-center"></span>
+                      </Link>
+                    )}
                   </motion.div>
                 ))}
               </motion.div>

@@ -38,7 +38,7 @@ const TestimonialsSection = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <h2 className="font-cormorant text-4xl font-bold text-luxury-charcoal mb-6">What Our Clients Say</h2>
-          <p className="font-poppins text-xl text-luxury-charcoal max-w-3xl mx-auto">
+          <p className="font-poppins italic text-xl text-luxury-charcoal max-w-3xl mx-auto">
             Don't just take our word for it. Here's what our satisfied clients have to say about their experience working with us.
           </p>
         </motion.div>
