@@ -295,7 +295,7 @@ const Header = () => {
             ? 'lg:bg-white/80 lg:backdrop-blur-xl lg:shadow-[0_4px_30px_rgba(0,0,0,0.03)] lg:border-b lg:border-luxury-gold/10' 
             : 'lg:bg-luxury-ivory lg:border-transparent'
         } ${isHidden ? '-translate-y-full lg:translate-y-0' : 'translate-y-0'}`}
-        style={{ height: isScrolled ? (window.innerWidth < 1024 ? '90px' : '80px') : (window.innerWidth < 1024 ? '110px' : '100px') }}
+        style={{ height: isScrolled ? (window.innerWidth < 1024 ? '70px' : '80px') : (window.innerWidth < 1024 ? '85px' : '100px') }}
       >
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 h-full">
           <div className="hidden lg:grid lg:grid-cols-[1fr_auto_1fr] items-center h-full">
@@ -327,8 +327,8 @@ const Header = () => {
             </nav>
           </div>
 
-          <div className={`lg:hidden grid grid-cols-[3rem_1fr_3rem] items-center h-full relative px-4 transition-all duration-500 mx-auto bg-white/80 backdrop-blur-xl rounded-full border border-luxury-gold/20 shadow-lg overflow-hidden ${
-            isScrolled ? 'w-[88%] h-[60px] top-2' : 'w-[94%] h-[70px] top-4'
+          <div className={`lg:hidden grid grid-cols-[3.5rem_1fr_3.5rem] items-center relative px-2 transition-all duration-500 mx-auto bg-white/90 backdrop-blur-md rounded-full border border-luxury-gold/20 shadow-[0_8px_32px_rgba(0,0,0,0.06)] overflow-hidden ${
+            isScrolled ? 'w-[90%] h-[50px] top-2' : 'w-[94%] h-[56px] top-3'
           }`}>
             {/* Architectural Noise Texture Overlay */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSBiYXNlRnJlcXVlbmN5PSIwLjkiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjIiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wMyIvPjwvc3ZnPg==')] mix-blend-multiply" />
@@ -339,7 +339,7 @@ const Header = () => {
                 <img
                   src="https://cfptjhjukjbqxewmgwxp.supabase.co/storage/v1/object/public/AjooniAndJasleen/logo.png"
                   alt="Logo"
-                  className="h-6 w-auto transition-transform duration-300 group-hover:scale-110"
+                  className="h-5 w-auto transition-transform duration-300 group-hover:scale-110 opacity-80"
                 />
               </Link>
             </div>
@@ -347,7 +347,7 @@ const Header = () => {
             {/* Wordmark Center (Absolute position removed in favor of grid centering) */}
             <div className="flex items-center justify-center relative z-10 w-full overflow-hidden">
               <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center group">
-                <h1 className="font-cormorant text-[14px] xs:text-[15px] sm:text-[16px] font-bold text-luxury-charcoal tracking-[0.2em] uppercase group-hover:text-luxury-gold transition-colors duration-300 whitespace-nowrap">
+                <h1 className="font-cormorant text-[13px] xs:text-[15px] sm:text-[17px] font-bold text-luxury-charcoal tracking-[0.22em] uppercase group-hover:text-luxury-gold transition-colors duration-300 whitespace-nowrap">
                   AJOONI JASLEEN
                 </h1>
               </Link>
@@ -360,26 +360,26 @@ const Header = () => {
                 className="w-10 h-10 flex flex-col justify-center items-center group relative p-0"
                 aria-label="Toggle Menu"
               >
-                <div className={`grid grid-cols-2 gap-[3px] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isMobileMenuOpen ? 'rotate-45' : ''}`}>
+                <div className={`grid grid-cols-2 gap-[4px] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isMobileMenuOpen ? 'rotate-45' : ''}`}>
                   <motion.div 
-                    animate={isMobileMenuOpen ? { x: 1.5, y: 1.5 } : { x: 0, y: 0 }}
+                    animate={isMobileMenuOpen ? { x: 2, y: 2 } : { x: 0, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="w-[3px] h-[3px] rounded-full bg-luxury-charcoal" 
+                    className="w-[3.5px] h-[3.5px] rounded-full bg-luxury-charcoal/80" 
                   />
                   <motion.div 
-                    animate={isMobileMenuOpen ? { x: -1.5, y: 1.5 } : { x: 0, y: 0 }}
+                    animate={isMobileMenuOpen ? { x: -2, y: 2 } : { x: 0, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="w-[3px] h-[3px] rounded-full bg-luxury-charcoal" 
+                    className="w-[3.5px] h-[3.5px] rounded-full bg-luxury-charcoal/80" 
                   />
                   <motion.div 
-                    animate={isMobileMenuOpen ? { x: 1.5, y: -1.5 } : { x: 0, y: 0 }}
+                    animate={isMobileMenuOpen ? { x: 2, y: -2 } : { x: 0, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="w-[3px] h-[3px] rounded-full bg-luxury-charcoal" 
+                    className="w-[3.5px] h-[3.5px] rounded-full bg-luxury-charcoal/80" 
                   />
                   <motion.div 
-                    animate={isMobileMenuOpen ? { x: -1.5, y: -1.5 } : { x: 0, y: 0 }}
+                    animate={isMobileMenuOpen ? { x: -2, y: -2 } : { x: 0, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="w-[3px] h-[3px] rounded-full bg-luxury-charcoal" 
+                    className="w-[3.5px] h-[3.5px] rounded-full bg-luxury-charcoal/80" 
                   />
                 </div>
               </button>
