@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DropdownMenu from './DropdownMenu';
 
@@ -69,28 +69,48 @@ const navigationItems = [
   }
 ];
 
-// Layout configuration
-const layoutConfig = {
-  desktop: {
-    container: 'hidden lg:flex items-center justify-between', // Main desktop header layout
-    leftNav: 'flex items-center space-x-4', // Left navigation group spacing
-    centerWordmark: 'flex-shrink-0 text-center group', // Centered wordmark positioning
-    rightNav: 'flex items-center space-x-0', // Right navigation group spacing
-    navLink: 'font-poppins px-4 text-base font-normal text-luxury-charcoal hover:text-luxury-gold uppercase tracking-wide border-0 relative group flex items-center' // Individual nav link styling
-  },
-  mobile: {
-    container: 'flex items-center justify-center lg:hidden relative', // Mobile header layout
-    menuPanel: 'fixed top-0 right-0 h-screen w-4/5 sm:w-3/4 bg-white z-50 lg:hidden mobile-menu shadow-2xl' // Mobile menu panel
-  }
-};
+
 
 const Header = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeMobileDropdownId, setActiveMobileDropdownId] = useState<string | null>(null);
   const [activeDesktopDropdownId, setActiveDesktopDropdownId] = useState<string | null>(null);
   const [showProductsTooltip, setShowProductsTooltip] = useState(false);
   const dropdownRefs = useRef<{ [key: string]: React.RefObject<HTMLDivElement> }>({});
-  const location = useLocation();
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      setIsScrolled(currentScrollY > 50);
+
+      // Don't hide when mobile menu is open
+      if (isMobileMenuOpen) {
+        lastScrollY.current = currentScrollY;
+        return;
+      }
+
+      const delta = currentScrollY - lastScrollY.current;
+
+      // Only react to meaningful scroll (10px threshold to prevent jitter)
+      if (Math.abs(delta) < 10) return;
+
+      if (delta > 0 && currentScrollY > 800) {
+        // Scrolling DOWN and past the hero section
+        setIsHidden(true);
+      } else if (delta < 0) {
+        // Scrolling UP — always show
+        setIsHidden(false);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobileMenuOpen]);
 
   navigationItems.forEach(item => {
     if (item.isDropdown && !dropdownRefs.current[item.id]) {
@@ -111,101 +131,92 @@ const Header = () => {
     return () => document.removeEventListener('keydown', handleEscape);
   }, []);
 
-  // Simplified menu handlers
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
 
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
     setActiveMobileDropdownId(null);
   };
-
   const toggleMobileDropdown = (itemId: string) => {
     setActiveMobileDropdownId(activeMobileDropdownId === itemId ? null : itemId);
   };
 
-  // Helper functions to filter navigation items
   const getLeftNavItems = () => navigationItems.filter(item => item.position === 'left');
   const getRightNavItems = () => navigationItems.filter(item => item.position === 'right');
   const getAllNavItems = () => navigationItems;
 
-  // Render individual navigation link
-  const renderNavLink = (item: typeof navigationItems[0], isMobile = false) => {
+  const renderNavLink = (item: any, isMobile = false) => {
     const baseClasses = isMobile 
-      ? 'font-poppins block py-3 text-base font-medium text-luxury-charcoal hover:text-luxury-gold rounded-sm px-3 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:ring-inset relative group'
-      : layoutConfig.desktop.navLink;
+      ? 'font-cormorant flex items-center w-full py-4 text-3xl sm:text-4xl font-light tracking-wide text-luxury-charcoal hover:text-luxury-gold transition-colors duration-500 relative group'
+      : '';
 
     if (item.isDropdown && !isMobile) {
-      const isOpen = activeDesktopDropdownId === item.id;
-
       return (
         <div
           key={item.id}
-          ref={dropdownRefs.current[item.id]}
-          className="relative"
+          className="relative h-full"
           onMouseEnter={() => setActiveDesktopDropdownId(item.id)}
           onMouseLeave={() => setActiveDesktopDropdownId(null)}
         >
           <Link
             to={item.path}
-            className="font-poppins flex items-center px-4 text-base font-normal text-luxury-charcoal hover:text-luxury-gold uppercase tracking-wide border-0 transition-colors duration-300 ease-out relative group"
-            style={{height: '100px'}}
+            className={`font-poppins flex items-center px-4 text-[13px] font-medium transition-all duration-500 ease-in-out uppercase tracking-[0.2em] relative group h-full ${
+              isScrolled ? 'text-luxury-charcoal' : 'text-luxury-charcoal/80'
+            } hover:text-luxury-gold`}
             onClick={(e) => {
-              e.preventDefault();
-              if (activeDesktopDropdownId === item.id) {
-                setActiveDesktopDropdownId(null);
-              } else {
-                setActiveDesktopDropdownId(item.id);
-              }
+              if (item.path === '#') e.preventDefault();
             }}
-            aria-haspopup="true"
-            aria-expanded={isOpen}
-            aria-label={`${item.name} menu`}
           >
             <span className="relative z-10">{item.name}</span>
             <ChevronDown
-              className={`w-4 h-4 ml-1 transform transition-transform duration-300 ease-out ${
-                isOpen ? 'rotate-180' : 'rotate-0'
+              className={`w-3 h-3 ml-2 transition-transform duration-500 ${
+                activeDesktopDropdownId === item.id ? 'rotate-180 text-luxury-gold' : ''
               }`}
             />
-            <span className="absolute bottom-8 left-4 right-4 h-0.5 bg-luxury-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
+            <span className="absolute bottom-1/2 translate-y-4 left-4 right-4 h-[1px] bg-luxury-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left" />
           </Link>
 
           <DropdownMenu
-            isOpen={isOpen}
+            isOpen={activeDesktopDropdownId === item.id}
             items={item.dropdownItems}
-            onClose={() => {
-              setActiveDesktopDropdownId(null);
-            }}
+            onClose={() => setActiveDesktopDropdownId(null)}
             triggerRef={dropdownRefs.current[item.id]}
           />
         </div>
       );
     } else {
-      // Regular link (desktop or mobile)
       const handleClick = (e: React.MouseEvent) => {
         if (item.id === 'products') {
           e.preventDefault();
           setShowProductsTooltip(true);
           setTimeout(() => setShowProductsTooltip(false), 2000);
-        } else {
-          if (isMobile) closeMobileMenu();
+        } else if (isMobile) {
+          closeMobileMenu();
         }
       };
 
       return (
-        <div key={item.id} className="relative">
+        <div key={item.id} className={`relative ${!isMobile ? 'h-full' : ''}`}>
           <Link
             to={item.path}
-            className={baseClasses}
-            style={!isMobile ? {height: '100px'} : undefined}
+            className={isMobile ? baseClasses : `font-poppins flex items-center px-4 text-[13px] font-medium transition-all duration-500 ease-in-out uppercase tracking-[0.2em] relative group h-full ${
+              isScrolled ? 'text-luxury-charcoal' : 'text-luxury-charcoal/80'
+            } hover:text-luxury-gold`}
             onClick={handleClick}
-            aria-label={`Navigate to ${item.name}`}
           >
             <span className="relative z-10">{item.name}</span>
             {!isMobile && (
-              <span className="absolute bottom-8 left-4 right-4 h-0.5 bg-luxury-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
+              <span className="absolute bottom-1/2 translate-y-4 left-4 right-4 h-[1px] bg-luxury-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 ease-out origin-left" />
             )}
           </Link>
           {item.id === 'products' && showProductsTooltip && (
@@ -213,7 +224,6 @@ const Header = () => {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
               className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 bg-luxury-charcoal text-white px-4 py-2 rounded-md text-sm font-poppins whitespace-nowrap shadow-lg z-50"
             >
               Coming Soon!
@@ -225,55 +235,51 @@ const Header = () => {
     }
   };
 
-  // Render mobile dropdown
-  const renderMobileDropdown = (item: typeof navigationItems[0]) => {
+  const renderMobileDropdown = (item: any) => {
     const isOpen = activeMobileDropdownId === item.id;
-    
     return (
-      <div key={item.id}>
+      <div key={item.id} className="border-b border-luxury-charcoal/10 pb-2">
         <button
           onClick={() => toggleMobileDropdown(item.id)}
-          className="font-poppins flex items-center justify-between w-full py-3 px-3 text-base font-medium text-luxury-charcoal hover:text-luxury-gold rounded-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:ring-inset"
-          aria-expanded={isOpen}
+          className="font-cormorant flex items-center justify-between w-full py-4 text-3xl sm:text-4xl font-light tracking-wide text-luxury-charcoal hover:text-luxury-gold transition-colors duration-500"
         >
           <span>{item.name}</span>
-          <ChevronDown className={`w-5 h-5 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`w-6 h-6 sm:w-8 sm:h-8 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'rotate-180 text-luxury-gold' : ''}`} />
         </button>
-        
         <AnimatePresence>
           {isOpen && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="ml-4 space-y-1 overflow-hidden"
+              transition={{ duration: 0.5, ease: [0.16,1,0.3,1] }}
+              className="overflow-hidden"
             >
-              {item.dropdownItems?.map((dropdownItem) => (
-                dropdownItem.isExternal ? (
-                  <a
-                    key={dropdownItem.name}
-                    href={dropdownItem.path}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={closeMobileMenu}
-                    className="font-poppins block py-2 px-3 text-sm text-luxury-charcoal hover:text-luxury-gold rounded-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:ring-inset relative group"
-                  >
-                    <span className="relative z-10">{dropdownItem.name}</span>
-                    <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-luxury-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
-                  </a>
-                ) : (
-                  <Link
-                    key={dropdownItem.name}
-                    to={dropdownItem.path}
-                    onClick={closeMobileMenu}
-                    className="font-poppins block py-2 px-3 text-sm text-luxury-charcoal hover:text-luxury-gold rounded-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:ring-inset relative group"
-                  >
-                    <span className="relative z-10">{dropdownItem.name}</span>
-                    <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-luxury-gold transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out origin-left"></span>
-                  </Link>
-                )
-              ))}
+              <div className="pl-6 border-l border-luxury-gold/30 ml-2 mt-2 mb-4 space-y-4">
+                {item.dropdownItems?.map((dropdownItem: any) => (
+                  dropdownItem.isExternal ? (
+                    <a
+                      key={dropdownItem.name}
+                      href={dropdownItem.path}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={closeMobileMenu}
+                      className="font-jost block py-2 text-[1.1rem] tracking-widest uppercase text-luxury-charcoal/80 hover:text-luxury-gold transition-colors duration-300"
+                    >
+                      {dropdownItem.name}
+                    </a>
+                  ) : (
+                    <Link
+                      key={dropdownItem.name}
+                      to={dropdownItem.path}
+                      onClick={closeMobileMenu}
+                      className="font-jost block py-2 text-[1.1rem] tracking-widest uppercase text-luxury-charcoal/80 hover:text-luxury-gold transition-colors duration-300"
+                    >
+                      {dropdownItem.name}
+                    </Link>
+                  )
+                ))}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -283,135 +289,135 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-luxury-ivory premium-gradient overflow-visible w-full h-25" style={{height: '100px'}}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" style={{height: '100px'}}>
-          {/* Desktop Header */}
-          <div className="hidden lg:grid lg:grid-cols-3 items-center" style={{height: '100px'}}>
-            {/* Left Navigation Group */}
-            <nav className="flex items-center space-x-4 justify-start" style={{height: '100px'}}>
+      <header 
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-700 ease-in-out w-full font-poppins ${
+          isScrolled 
+            ? 'lg:bg-white/80 lg:backdrop-blur-xl lg:shadow-[0_4px_30px_rgba(0,0,0,0.03)] lg:border-b lg:border-luxury-gold/10' 
+            : 'lg:bg-luxury-ivory lg:border-transparent'
+        } ${isHidden ? '-translate-y-full lg:translate-y-0' : 'translate-y-0'}`}
+        style={{ height: isScrolled ? (window.innerWidth < 1024 ? '90px' : '80px') : (window.innerWidth < 1024 ? '110px' : '100px') }}
+      >
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-12 h-full">
+          <div className="hidden lg:grid lg:grid-cols-[1fr_auto_1fr] items-center h-full">
+            <nav className="flex items-center space-x-8 justify-start h-full">
               {getLeftNavItems().map(item => renderNavLink(item))}
             </nav>
 
-            {/* Centered Wordmark */}
-            <div className="flex items-center justify-center" style={{height: '100px'}}>
-              <Link to="/" className="flex flex-col items-center justify-center text-center group" style={{height: '100px'}}>
-                <h1 className="text-4xl font-bold text-luxury-charcoal tracking-wide leading-tight m-0 group-hover:text-luxury-gold transition-colors duration-300 ease-out">
-                  Ajooni Jasleen
-                </h1>
-                <p className="text-xs text-luxury-charcoal uppercase tracking-widest m-0 leading-tight group-hover:text-luxury-gold/80 transition-colors duration-300 ease-out">Architects</p>
+            <div className="flex items-center justify-center px-24 h-full">
+              <Link 
+                to="/" 
+                className="flex flex-col items-center justify-center text-center group relative py-4"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              >
+                <div className="flex items-center justify-center mb-1">
+                  <h1 className="font-cormorant text-2xl md:text-3xl font-bold text-luxury-charcoal tracking-[0.2em] uppercase transition-colors duration-500 group-hover:text-luxury-gold whitespace-nowrap">
+                    AJOONI JASLEEN
+                  </h1>
+                </div>
+                <div className="overflow-hidden relative flex flex-col items-center">
+                  <span className="block text-[8px] md:text-[9px] text-luxury-charcoal/50 uppercase tracking-[0.5em] font-medium transition-all duration-500 group-hover:tracking-[0.7em] group-hover:text-luxury-gold/70">
+                    Architects & Designers
+                  </span>
+                </div>
               </Link>
             </div>
 
-            {/* Right Navigation Group */}
-            <nav className="flex items-center space-x-1 justify-end" style={{height: '100px'}}>
+            <nav className="flex items-center space-x-8 justify-end h-full">
               {getRightNavItems().map(item => renderNavLink(item))}
             </nav>
           </div>
 
-          {/* Mobile Header */}
-          <div className={layoutConfig.mobile.container} style={{height: '75px'}}>
-            {/* Left Zone - Logo */}
-            <div className="absolute left-2 flex items-center justify-center group" style={{height: '75px'}}>
-              <Link to="/" onClick={closeMobileMenu} className="flex items-center h-full">
+          <div className={`lg:hidden grid grid-cols-[3rem_1fr_3rem] items-center h-full relative px-4 transition-all duration-500 mx-auto bg-white/80 backdrop-blur-xl rounded-full border border-luxury-gold/20 shadow-lg overflow-hidden ${
+            isScrolled ? 'w-[88%] h-[60px] top-2' : 'w-[94%] h-[70px] top-4'
+          }`}>
+            {/* Architectural Noise Texture Overlay */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSBiYXNlRnJlcXVlbmN5PSIwLjkiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjIiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wMyIvPjwvc3ZnPg==')] mix-blend-multiply" />
+            
+            {/* Logo area */}
+            <div className="flex items-center justify-start group relative z-10">
+              <Link to="/" onClick={() => { closeMobileMenu(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center">
                 <img
                   src="https://cfptjhjukjbqxewmgwxp.supabase.co/storage/v1/object/public/AjooniAndJasleen/logo.png"
-                  alt="Ajooni & Jasleen Logo"
-                  className="h-10 w-auto max-w-full group-hover:scale-105 transition-transform duration-300 ease-out"
+                  alt="Logo"
+                  className="h-6 w-auto transition-transform duration-300 group-hover:scale-110"
                 />
               </Link>
             </div>
 
-            {/* Center Zone - Brand Name */}
-            <div className="flex items-center justify-center group" style={{height: '75px'}}>
-              <Link to="/" className="flex flex-col items-center justify-center text-center group">
-                <h1 className="text-xl font-bold text-luxury-charcoal tracking-wide leading-tight m-0 group-hover:text-luxury-gold transition-colors duration-300 ease-out">
-                  Ajooni Jasleen
+            {/* Wordmark Center (Absolute position removed in favor of grid centering) */}
+            <div className="flex items-center justify-center relative z-10 w-full overflow-hidden">
+              <Link to="/" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center group">
+                <h1 className="font-cormorant text-[14px] xs:text-[15px] sm:text-[16px] font-bold text-luxury-charcoal tracking-[0.2em] uppercase group-hover:text-luxury-gold transition-colors duration-300 whitespace-nowrap">
+                  AJOONI JASLEEN
                 </h1>
-                <p className="text-[0.5rem] text-luxury-charcoal uppercase tracking-widest m-0 leading-tight group-hover:text-luxury-gold/80 transition-colors duration-300 ease-out">Architects</p>
               </Link>
             </div>
 
-            {/* Right Zone - Mobile menu button */}
-            <button
-              onClick={toggleMobileMenu}
-              className="absolute right-2 flex items-center justify-center text-luxury-charcoal hover:text-luxury-gold hover:scale-105 focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:ring-offset-2 rounded-sm p-2 transition-all duration-300 ease-out"
-              style={{height: '75px'}}
-              aria-label="Toggle mobile menu"
-              aria-expanded={isMobileMenuOpen}
-            >
-              <motion.div
-                animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
-                transition={{ duration: 0.2 }}
+            {/* Architectural Dot Grid Toggle (Option A) */}
+            <div className="flex items-center justify-end relative z-10 h-full">
+              <button 
+                onClick={toggleMobileMenu} 
+                className="w-10 h-10 flex flex-col justify-center items-center group relative p-0"
+                aria-label="Toggle Menu"
               >
-                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-              </motion.div>
-            </button>
+                <div className={`grid grid-cols-2 gap-[3px] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${isMobileMenuOpen ? 'rotate-45' : ''}`}>
+                  <motion.div 
+                    animate={isMobileMenuOpen ? { x: 1.5, y: 1.5 } : { x: 0, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-[3px] h-[3px] rounded-full bg-luxury-charcoal" 
+                  />
+                  <motion.div 
+                    animate={isMobileMenuOpen ? { x: -1.5, y: 1.5 } : { x: 0, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-[3px] h-[3px] rounded-full bg-luxury-charcoal" 
+                  />
+                  <motion.div 
+                    animate={isMobileMenuOpen ? { x: 1.5, y: -1.5 } : { x: 0, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-[3px] h-[3px] rounded-full bg-luxury-charcoal" 
+                  />
+                  <motion.div 
+                    animate={isMobileMenuOpen ? { x: -1.5, y: -1.5 } : { x: 0, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="w-[3px] h-[3px] rounded-full bg-luxury-charcoal" 
+                  />
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Backdrop */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-            onClick={closeMobileMenu}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* Mobile Menu Panel */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
-            className={layoutConfig.mobile.menuPanel}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 w-full h-screen bg-luxury-ivory z-50 lg:hidden overflow-y-auto"
           >
-            <div className="flex flex-col h-full">
-              {/* Mobile Menu Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                <Link to="/" onClick={closeMobileMenu}>
-                  <h2 className="font-cormorant text-xlg font-bold text-luxury-charcoal my-0">MENU</h2>
-                </Link>
-                <button
-                  onClick={closeMobileMenu}
-                  className="p-2 text-luxury-charcoal hover:text-luxury-gold focus:outline-none focus:ring-2 focus:ring-luxury-gold rounded-sm"
-                  aria-label="Close menu"
-                >
-                  <X size={24} />
-                </button>
+            {/* Minimalist Noise Texture */}
+            <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSBiYXNlRnJlcXVlbmN5PSIwLjkiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjIiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wMyIvPjwvc3ZnPg==')] mix-blend-multiply" />
+            
+            <div className="flex flex-col px-8 pt-[120px] pb-12 min-h-screen relative z-10">
+              <div className="flex items-center justify-between mb-8 border-b border-luxury-charcoal/10 pb-4">
+                <h2 className="font-jost text-xs font-semibold tracking-[0.3em] uppercase text-luxury-charcoal/40">Navigation</h2>
               </div>
-
-              {/* Mobile Menu Items */}
-              <nav className="flex-1 px-6 py-4 space-y-2 overflow-y-auto">
-                {/* Regular navigation items */}
-                {getAllNavItems().filter(item => !item.isDropdown).map(item => renderNavLink(item, true))}
-
-                {/* Dropdown items with expandable sections */}
-                <div className="border-t border-gray-200 pt-2 mt-4">
-                  {getAllNavItems().filter(item => item.isDropdown).map(item => renderMobileDropdown(item))}
-                </div>
+              <nav className="flex flex-col space-y-2 flex-grow">
+                {getAllNavItems().map(item => item.isDropdown ? renderMobileDropdown(item) : (
+                  <div key={item.id} className="border-b border-luxury-charcoal/10 flex items-center">
+                    {renderNavLink(item, true)}
+                  </div>
+                ))}
               </nav>
-
-              {/* Mobile Contact Button */}
-              <div className="p-6 border-t border-gray-200">
+              <div className="mt-16 pb-8">
                 <button
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     closeMobileMenu();
-                    const contactSection = document.getElementById('contact');
-                    if (contactSection) {
-                      contactSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
+                    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="w-full py-3 px-6 text-base font-medium tracking-wider border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-white hover:scale-105 transition-all duration-300 ease-out rounded-sm focus:outline-none focus:ring-2 focus:ring-luxury-gold focus:ring-offset-2 font-poppins"
+                  className="w-full py-5 border border-luxury-gold text-luxury-gold uppercase tracking-[0.3em] text-sm font-medium hover:bg-luxury-gold hover:text-white transition-all duration-300"
                 >
                   Contact Us
                 </button>
@@ -420,8 +426,6 @@ const Header = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Coming Soon Popup */}
     </>
   );
 };

@@ -34,7 +34,7 @@ const LazyImage: React.FC<LazyImageProps> = ({
           observer.disconnect();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0, rootMargin: '500px' }
     );
 
     if (imgRef.current) {

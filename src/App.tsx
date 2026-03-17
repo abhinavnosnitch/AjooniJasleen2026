@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import BackToHomeButton from './components/BackToHomeButton';
 import UnifiedHomepage from './pages/UnifiedHomepage';
@@ -45,15 +46,31 @@ import FitnessBySomaPage from './pages/FitnessBySomaPage';
 import RajshreeHotelPage from './pages/RajshreeHotelPage';
 import LoadingScreen from './components/LoadingScreen';
 
+import Footer from './components/Footer';
+
 // AppContent component that uses useLocation (must be inside Router)
 const AppContent = () => {
   const location = useLocation();
   const isHomePage = location.pathname === '/';
 
-  // Scroll to top when route changes
+  // Scroll to top or to hash when route changes
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-  }, [location.pathname]);
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      const element = document.getElementById(id);
+      if (element) {
+        // Scroll to the element
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth' });
+          // After scrolling, remove the hash from the URL without adding to history
+          // This keeps the back button working naturally (leading to top of page)
+          window.history.replaceState(null, '', window.location.pathname);
+        }, 100);
+      }
+    } else {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    }
+  }, [location.pathname, location.hash]);
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden w-full">
@@ -64,49 +81,61 @@ const AppContent = () => {
         {/* Back to Home button for non-homepage routes */}
         <BackToHomeButton />
         
-        <Routes>
-          <Route path="/" element={<UnifiedHomepage />} />
-          <Route path="/studio" element={<OurStudioPage />} />
-          <Route path="/team" element={<TeamPage />} />
-          <Route path="/services" element={<ServicesPage />} />
-          <Route path="/projects" element={<AllProjectsPage />} />
-          <Route path="/projects/residential" element={<ResidentialProjectsPage />} />
-          <Route path="/projects/commercial" element={<CommercialProjectsPage />} />
-          <Route path="/projects/interior-design" element={<InteriorDesignProjectsPage />} />
-          <Route path="/projects/antler-woods" element={<AntlerWoodsPage />} />
-          <Route path="/projects/arcadia" element={<ArcadiaPage />} />
-          <Route path="/projects/archmere" element={<ArchmerePage />} />
-          <Route path="/projects/basha-kabob" element={<BashaKabobPage />} />
-          <Route path="/projects/bharat-residency" element={<BharatResidencyPage />} />
-          <Route path="/projects/car-dynamics" element={<CarDynamicsPage />} />
-          <Route path="/projects/chennai-maratha" element={<ChennaiMarathaPage />} />
-          <Route path="/projects/chennai-maratha-phase5" element={<ChennaiMarathaPhase5Page />} />
-          <Route path="/projects/faggu-homestay" element={<FagguHomeStayPage />} />
-          <Route path="/projects/healthy-earth-ambala" element={<HealthyEarthAmbalaPage />} />
-          <Route path="/projects/healthy-earth-phase10" element={<HealthyEarthPhase10Page />} />
-          <Route path="/projects/healthy-earth-kharkhara" element={<HealthyEarthKharkharaPage />} />
-          <Route path="/projects/healthy-earth-moga" element={<HealthyEarthMogaPage />} />
-          <Route path="/projects/kasauli-cottage" element={<KasauliCottagePage />} />
-          <Route path="/projects/kohzeen" element={<KohzeenPage />} />
-          <Route path="/projects/pathankot-hotel" element={<PathankotHotelPage />} />
-          <Route path="/projects/saidpur-residence" element={<SaidpurResidencePage />} />
-          <Route path="/projects/interiors-contemporary" element={<InteriorsContemporaryPage />} />
-          <Route path="/projects/jade-restaurant" element={<JadeRestaurantPage />} />
-          <Route path="/projects/lapinoz" element={<LapinozPage />} />
-          <Route path="/projects/aerocity" element={<AeroCityPage />} />
-          <Route path="/projects/medallion" element={<MedallionPage />} />
-          <Route path="/projects/nahaan" element={<NahaanPage />} />
-          <Route path="/projects/nirwana-heights" element={<NirwanaHeightsPage />} />
-          <Route path="/projects/redbricks-office" element={<RedbricksOfficePage />} />
-          <Route path="/projects/pub-patiala" element={<PubPatialaPage />} />
-          <Route path="/projects/punjabi-chullah" element={<PunjabiChullahPage />} />
-          <Route path="/projects/rama-store" element={<RamaStorePage />} />
-          <Route path="/projects/beauty-and-spa" element={<BeautyAndSpaPage />} />
-          <Route path="/projects/pulse-bar" element={<PulseBarPage />} />
-          <Route path="/projects/fitness-by-soma" element={<FitnessBySomaPage />} />
-          <Route path="/projects/rajshree-hotel" element={<RajshreeHotelPage />} />
-          <Route path="/shiddat" element={<ShiddatPage />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+          >
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<UnifiedHomepage />} />
+              <Route path="/studio" element={<OurStudioPage />} />
+              <Route path="/team" element={<TeamPage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/projects" element={<AllProjectsPage />} />
+              <Route path="/projects/residential" element={<ResidentialProjectsPage />} />
+              <Route path="/projects/commercial" element={<CommercialProjectsPage />} />
+              <Route path="/projects/interior-design" element={<InteriorDesignProjectsPage />} />
+              <Route path="/projects/antler-woods" element={<AntlerWoodsPage />} />
+              <Route path="/projects/arcadia" element={<ArcadiaPage />} />
+              <Route path="/projects/archmere" element={<ArchmerePage />} />
+              <Route path="/projects/basha-kabob" element={<BashaKabobPage />} />
+              <Route path="/projects/bharat-residency" element={<BharatResidencyPage />} />
+              <Route path="/projects/car-dynamics" element={<CarDynamicsPage />} />
+              <Route path="/projects/chennai-maratha" element={<ChennaiMarathaPage />} />
+              <Route path="/projects/chennai-maratha-phase5" element={<ChennaiMarathaPhase5Page />} />
+              <Route path="/projects/faggu-homestay" element={<FagguHomeStayPage />} />
+              <Route path="/projects/healthy-earth-ambala" element={<HealthyEarthAmbalaPage />} />
+              <Route path="/projects/healthy-earth-phase10" element={<HealthyEarthPhase10Page />} />
+              <Route path="/projects/healthy-earth-kharkhara" element={<HealthyEarthKharkharaPage />} />
+              <Route path="/projects/healthy-earth-moga" element={<HealthyEarthMogaPage />} />
+              <Route path="/projects/kasauli-cottage" element={<KasauliCottagePage />} />
+              <Route path="/projects/kohzeen" element={<KohzeenPage />} />
+              <Route path="/projects/pathankot-hotel" element={<PathankotHotelPage />} />
+              <Route path="/projects/saidpur-residence" element={<SaidpurResidencePage />} />
+              <Route path="/projects/interiors-contemporary" element={<InteriorsContemporaryPage />} />
+              <Route path="/projects/jade-restaurant" element={<JadeRestaurantPage />} />
+              <Route path="/projects/lapinoz" element={<LapinozPage />} />
+              <Route path="/projects/aerocity" element={<AeroCityPage />} />
+              <Route path="/projects/medallion" element={<MedallionPage />} />
+              <Route path="/projects/nahaan" element={<NahaanPage />} />
+              <Route path="/projects/nirwana-heights" element={<NirwanaHeightsPage />} />
+              <Route path="/projects/redbricks-office" element={<RedbricksOfficePage />} />
+              <Route path="/projects/pub-patiala" element={<PubPatialaPage />} />
+              <Route path="/projects/punjabi-chullah" element={<PunjabiChullahPage />} />
+              <Route path="/projects/rama-store" element={<RamaStorePage />} />
+              <Route path="/projects/beauty-and-spa" element={<BeautyAndSpaPage />} />
+              <Route path="/projects/pulse-bar" element={<PulseBarPage />} />
+              <Route path="/projects/fitness-by-soma" element={<FitnessBySomaPage />} />
+              <Route path="/projects/rajshree-hotel" element={<RajshreeHotelPage />} />
+              <Route path="/shiddat" element={<ShiddatPage />} />
+            </Routes>
+          </motion.div>
+        </AnimatePresence>
+
+        <Footer />
       </div>
     </div>
   );
@@ -163,7 +192,7 @@ function App() {
      * @returns {Promise<void>} Promise that resolves when image loads
      */
     const preloadImage = (src: string): Promise<void> => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         const img = new Image();
         
         img.onload = () => {

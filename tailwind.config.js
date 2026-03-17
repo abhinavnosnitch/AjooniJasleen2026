@@ -8,6 +8,8 @@ export default {
         'cormorant': ['Cormorant Garamond', 'serif'],
         'poppins': ['Poppins', 'sans-serif'],
         'montserrat': ['Montserrat', 'sans-serif'],
+        'jost': ['Jost', 'sans-serif'],
+        'greatvibes': ['Great Vibes', 'cursive'],
       },
       colors: {
         'luxury': {

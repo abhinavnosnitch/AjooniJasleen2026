@@ -1,5 +1,6 @@
-import React from 'react';
+
 import { motion } from 'framer-motion';
+
 import {
   Building,
   Users,
@@ -9,6 +10,8 @@ import {
 } from 'lucide-react';
 
 const TeamPage = () => {
+
+
   const teamMembers = [
     {
       id: 1,
@@ -106,7 +109,7 @@ const TeamPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-luxury-ivory noise-texture overflow-x-hidden w-full">
+    <div className="min-h-screen bg-luxury-ivory overflow-x-hidden w-full">
       {/* Hero Section */}
       <section className="pt-20 pb-16 bg-luxury-ivory overflow-x-hidden">
         <motion.div 
@@ -254,7 +257,7 @@ const TeamPage = () => {
 
           {/* Team Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-            {teamMembers.filter(member => !member.hidden).map((member, index) => (
+            {teamMembers.filter((member: any) => !member.hidden).map((member, index) => (
               <motion.div
                 key={member.id}
                 className="group cursor-pointer"

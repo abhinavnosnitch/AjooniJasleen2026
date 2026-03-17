@@ -1,8 +1,10 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import useScrollReveal from '../hooks/useScrollReveal';
 import { useNavigate } from 'react-router-dom';
+import LazyImage from '../components/LazyImage';
 
 const CommercialProjectsPage = () => {
+  const revealRef = useScrollReveal();
   const navigate = useNavigate();
 
   const projects = [
@@ -27,7 +29,7 @@ const CommercialProjectsPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-luxury-ivory noise-texture overflow-x-hidden w-full">
+    <div className="min-h-screen bg-luxury-ivory overflow-x-hidden w-full">
       <section className="pt-20 pb-16 bg-luxury-ivory overflow-x-hidden">
         <motion.div
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
@@ -51,36 +53,30 @@ const CommercialProjectsPage = () => {
 
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
-            {projects.map((project, index) => (
-              <motion.div
+          <div ref={revealRef} className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+            {projects.map((project) => (
+              <div
                 key={project.id}
-                className="group cursor-pointer break-inside-avoid mb-8"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{
-                  duration: 0.6,
-                  ease: "easeOut",
-                  delay: index * 0.1
-                }}
+                className="reveal-card group cursor-pointer break-inside-avoid mb-8"
                 onClick={() => navigate(project.path)}
               >
-                <div className="relative overflow-hidden rounded-lg shadow-lg transform transition-all duration-700 ease-out group-hover:shadow-2xl group-hover:scale-[1.02]">
-                  <div className="relative aspect-[4/5]">
-                    <img
+                <div className="relative overflow-hidden rounded-lg bg-luxury-ivory shadow-lg will-change-transform transition-shadow duration-500 ease-out group-hover:shadow-2xl">
+                  <div className="relative">
+                    <LazyImage
                       src={project.image}
                       alt={project.name}
-                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                      loading="lazy"
+                      maintainAspectRatio={true}
+                      objectFit="cover"
+                      className="transition-transform duration-500 ease-out group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
-
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                      <h3 className="font-cormorant text-2xl font-bold text-white mb-1">
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-luxury-charcoal/80 via-luxury-charcoal/20 to-transparent" />
+                  <div className="absolute inset-0 flex items-end justify-start p-6">
+                    <div className="text-left">
+                      <h3 className="font-cormorant text-2xl font-bold text-white mb-2">
                         {project.name}
                       </h3>
-                      <p className="font-poppins text-sm text-white/90 uppercase tracking-wider">
+                      <p className="font-poppins text-sm text-white/80 uppercase tracking-wider">
                         Commercial
                       </p>
                     </div>
@@ -88,7 +84,7 @@ const CommercialProjectsPage = () => {
 
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-luxury-gold to-luxury-gold/60 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-out origin-left" />
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
 import { Shield, Package, Sparkles, Eye, Infinity, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ServicesSection = () => {
-  const [currentPromiseIndex, setCurrentPromiseIndex] = React.useState(0);
+  const [currentPromiseIndex, setCurrentPromiseIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
   const promises = [
@@ -82,7 +82,7 @@ const ServicesSection = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div className="text-center mb-20">
-            <h2 className="font-cormorant text-3xl sm:text-4xl lg:text-5xl font-bold text-luxury-charcoal mb-6">
+            <h2 className="font-cormorant text-3xl sm:text-4xl lg:text-5xl font-bold text-luxury-gold mb-6">
               Our Promise to You
             </h2>
             <p className="font-poppins text-base sm:text-lg italic text-luxury-charcoal/70 max-w-3xl mx-auto leading-relaxed">
@@ -110,7 +110,7 @@ const ServicesSection = () => {
                     {promise.icon}
                   </div>
 
-                  <h3 className="font-cormorant text-xl sm:text-2xl font-semibold text-luxury-charcoal mb-4 leading-tight">
+                  <h3 className="font-cormorant text-lg sm:text-2xl font-semibold text-luxury-charcoal mb-4 leading-tight">
                     {promise.title}
                   </h3>
 
@@ -141,7 +141,7 @@ const ServicesSection = () => {
                     {promises[currentPromiseIndex].icon}
                   </div>
 
-                  <h3 className="font-cormorant text-xl sm:text-2xl font-semibold text-luxury-charcoal mb-4 leading-tight">
+                  <h3 className="font-cormorant text-lg sm:text-2xl font-semibold text-luxury-charcoal mb-4 leading-tight">
                     {promises[currentPromiseIndex].title}
                   </h3>
 

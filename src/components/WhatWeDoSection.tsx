@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { AnimatePresence } from 'framer-motion';
 import { Building, Palette, Package, RefreshCw, Leaf, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const WhatWeDoSection = () => {
-  const [currentServiceIndex, setCurrentServiceIndex] = React.useState(0);
+  const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
   const services = [
@@ -82,7 +82,7 @@ const WhatWeDoSection = () => {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <div className="text-center mb-8">
-            <h2 className="font-cormorant text-3xl sm:text-4xl lg:text-5xl font-bold text-luxury-charcoal mb-6">
+            <h2 className="font-cormorant text-3xl sm:text-4xl lg:text-5xl font-bold text-luxury-gold mb-6">
               What We Do for You
             </h2>
             <p className="font-poppins text-base sm:text-lg italic text-luxury-charcoal/70 max-w-3xl mx-auto leading-relaxed">
@@ -110,7 +110,7 @@ const WhatWeDoSection = () => {
                     {service.icon}
                   </div>
 
-                  <h3 className="font-cormorant text-xl sm:text-2xl font-semibold text-luxury-charcoal mb-4 leading-tight">
+                  <h3 className="font-cormorant text-lg sm:text-2xl font-semibold text-luxury-charcoal mb-4 leading-tight">
                     {service.title}
                   </h3>
 
@@ -141,7 +141,7 @@ const WhatWeDoSection = () => {
                     {services[currentServiceIndex].icon}
                   </div>
 
-                  <h3 className="font-cormorant text-xl sm:text-2xl font-semibold text-luxury-charcoal mb-4 leading-tight">
+                  <h3 className="font-cormorant text-lg sm:text-2xl font-semibold text-luxury-charcoal mb-4 leading-tight">
                     {services[currentServiceIndex].title}
                   </h3>
 

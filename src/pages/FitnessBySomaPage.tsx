@@ -1,9 +1,11 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import useScrollReveal from '../hooks/useScrollReveal';
 import LazyImage from '../components/LazyImage';
 import BackToHomeButton from '../components/BackToHomeButton';
 
 const FitnessBySomaPage = () => {
+  const revealRef = useScrollReveal();
+
   const images = [
     'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/Projects/fitness-by-soma/WhatsApp%20Image%202025-11-25%20at%2018.16.12.jpeg',
     'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/Projects/fitness-by-soma/WhatsApp%20Image%202025-11-25%20at%2018.16.14.jpeg',
@@ -41,24 +43,11 @@ const FitnessBySomaPage = () => {
             </p>
           </motion.div>
 
-          <motion.div
-            className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          <div ref={revealRef} className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
             {images.map((image, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="group relative overflow-hidden rounded-lg shadow-lg break-inside-avoid mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{
-                  duration: 0.6,
-                  ease: "easeOut",
-                  delay: index * 0.05
-                }}
+                className="reveal-card group relative overflow-hidden rounded-lg shadow-lg break-inside-avoid mb-6"
               >
                 <div className="relative w-full">
                   <LazyImage
@@ -70,21 +59,15 @@ const FitnessBySomaPage = () => {
                   <div className="absolute inset-0 bg-luxury-charcoal/0 group-hover:bg-luxury-charcoal/10 transition-all duration-500 ease-out" />
                   <div className="absolute inset-0 border-2 border-luxury-gold/0 group-hover:border-luxury-gold/40 transition-all duration-500 ease-out m-4 rounded-lg" />
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="mt-20 text-center max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+          <div className="reveal-card mt-20 text-center max-w-3xl mx-auto">
             <p className="font-cormorant text-xl sm:text-2xl text-luxury-charcoal/80 italic leading-relaxed">
               A state-of-the-art fitness center where motivating design inspires peak performance and wellness excellence.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>

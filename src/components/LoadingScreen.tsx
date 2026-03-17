@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface LoadingScreenProps {
   progress?: number;
@@ -7,100 +7,157 @@ interface LoadingScreenProps {
 }
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ progress = 0, isTransitioning = false }) => {
+  // We use a local progress state to ensure smooth numerical increments
+  const [displayProgress, setDisplayProgress] = useState(0);
+
+  useEffect(() => {
+    // Smoothen the progress increment
+    const interval = setInterval(() => {
+      setDisplayProgress((prev) => {
+        if (prev < progress) return prev + 1;
+        return prev;
+      });
+    }, 20);
+    return () => clearInterval(interval);
+  }, [progress]);
+
+  const brandName = "AJOONI JASLEEN";
+  const brandSubtext = "ARCHITECTS & DESIGNERS";
+
+  // Animation variants
+  const containerVariants = {
+    exit: {
+      transition: {
+        staggerChildren: 0.1,
+      }
+    }
+  };
+
+  const shutterVariants = {
+    initial: { y: 0 },
+    exit: { 
+      y: "-100%",
+      transition: { 
+        duration: 1.2, 
+        ease: [0.76, 0, 0.24, 1] as any,
+      }
+    }
+  };
+
+  const letterVariants = {
+    initial: { y: 40, opacity: 0 },
+    animate: (i: number) => ({
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 1,
+        delay: 0.05 * i,
+        ease: [0.215, 0.61, 0.355, 1] as any,
+      }
+    }),
+    exit: {
+      y: -20,
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+        ease: [0.215, 0.61, 0.355, 1] as any,
+      }
+    }
+  };
+
   return (
-    <div className={`fixed inset-0 z-50 bg-luxury-ivory flex items-center justify-center loading-screen ${isTransitioning ? 'loading-screen-fade-out' : ''}`}>
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-[0.02] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSBiYXNlRnJlcXVlbmN5PSIwLjkiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjIiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wMyIvPjwvc3ZnPg==')] bg-repeat" style={{ backgroundSize: '200px 200px' }} />
-      
-      <div className="text-center">
-        {/* Logo Container with Beeping Animation */}
+    <AnimatePresence mode="wait">
+      {!isTransitioning && (
         <motion.div
-          className="mb-8"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ 
-            opacity: [0, 1, 1, 0.7, 1],
-            scale: [0.8, 1, 1.05, 1, 1.02, 1]
-          }}
-          transition={{
-            duration: 2.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            times: [0, 0.2, 0.5, 0.7, 0.9, 1]
-          }}
+          variants={containerVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          className="fixed inset-0 z-[100] overflow-hidden bg-white"
         >
-          <img 
-            src="https://cfptjhjukjbqxewmgwxp.supabase.co/storage/v1/object/public/AjooniAndJasleen/logo.png"
-            alt="Ajooni & Jasleen Logo"
-            className="h-20 w-auto mx-auto"
-            loading="eager"
+          {/* Shutter Layer 1 (Slightly darker ivory) */}
+          <motion.div 
+            variants={shutterVariants}
+            className="absolute inset-0 bg-[#E8E4DB] z-10"
           />
-        </motion.div>
-
-        {/* Company Name with Elegant Typography */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="mb-8"
-        >
-          <h1 className="font-cormorant text-3xl font-bold text-luxury-charcoal tracking-wide leading-none mb-2">
-            Ajooni Jasleen
-          </h1>
-          <p className="font-poppins text-sm text-luxury-charcoal uppercase tracking-widest">
-            Design Studio
-          </p>
-        </motion.div>
-
-        {/* Progress Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
-          className="w-64 mx-auto"
-        >
-          {/* Progress Bar Background */}
-          <div className="w-full h-1 bg-gray-200 rounded-full overflow-hidden mb-4">
-            <motion.div
-              className="h-full bg-gradient-to-r from-luxury-gold to-luxury-gold rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-            />
-          </div>
           
-          {/* Loading Text */}
-          <motion.p
-            className="font-poppins text-xs text-luxury-charcoal uppercase tracking-wider"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          {/* Shutter Layer 2 (Main Luxury Ivory) */}
+          <motion.div 
+            initial={{ y: 0 }}
+            exit={{ 
+              y: "-100%",
+              transition: { duration: 1.2, delay: 0.1, ease: [0.76, 0, 0.24, 1] as any }
+            }}
+            className="absolute inset-0 bg-[#F9F7F3] z-20 flex flex-col items-center justify-center"
           >
-            Preparing Your Experience
-          </motion.p>
-        </motion.div>
+            {/* Background Texture Overlay */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSBiYXNlRnJlcXVlbmN5PSIwLjkiIG51bU9jdGF2ZXM9IjQiIHNlZWQ9IjIiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wMyIvPjwvc3ZnPg==')] mix-blend-multiply" />
 
-        {/* Subtle Pulse Ring Animation */}
-        <motion.div
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.1 }}
-          transition={{ duration: 1, delay: 0.8 }}
-        >
-          <motion.div
-            className="w-96 h-96 border border-luxury-gold/20 rounded-full"
-            animate={{ 
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.05, 0.1]
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
+            <div className="relative z-30 flex flex-col items-center">
+              {/* Logo with subtle scale and fade */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                className="mb-12"
+              >
+                <img 
+                  src="https://cfptjhjukjbqxewmgwxp.supabase.co/storage/v1/object/public/AjooniAndJasleen/logo.png"
+                  alt="Logo"
+                  className="h-16 w-auto mix-blend-multiply opacity-80"
+                />
+              </motion.div>
+
+              {/* Staggered Brand Name */}
+              <div className="flex space-x-[1px] mb-4 whitespace-nowrap px-4">
+                {brandName.split("").map((char, i) => (
+                  <motion.span
+                    key={i}
+                    custom={i}
+                    variants={letterVariants}
+                    className="font-cormorant text-2xl sm:text-3xl md:text-5xl font-light tracking-[0.15em] text-[#2E2E2E]"
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+              </div>
+
+              {/* Subtext Reveal */}
+              <motion.div
+                initial={{ opacity: 0, letterSpacing: "0.1em" }}
+                animate={{ opacity: 0.5, letterSpacing: "0.4em" }}
+                transition={{ duration: 2, delay: 0.8, ease: "easeOut" }}
+                className="font-poppins text-[8px] sm:text-[10px] md:text-xs text-[#2E2E2E] uppercase font-medium text-center"
+              >
+                {brandSubtext}
+              </motion.div>
+
+              {/* Minimalist Progress Counter - Integrated into center flow for better mid-screen position */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 1.2 }}
+                className="mt-20 md:mt-24 flex items-baseline space-x-4"
+              >
+                <span className="font-poppins text-[10px] uppercase tracking-[0.3em] opacity-30 text-[#2E2E2E]">Loading</span>
+                <div className="w-12 h-[1px] bg-[#2E2E2E] opacity-10" />
+                <span className="font-cormorant text-2xl italic font-light min-w-[3rem] text-[#2E2E2E]">
+                  {displayProgress.toString().padStart(2, '0')}
+                </span>
+                <span className="font-cormorant text-sm opacity-20 text-[#2E2E2E]">/ 100</span>
+              </motion.div>
+            </div>
+
+            {/* Corner Accents (Architectural feel) */}
+            <div className="absolute top-12 left-12 w-8 h-8 border-t border-l border-[#2E2E2E]/10" />
+            <div className="absolute top-12 right-12 w-8 h-8 border-t border-r border-[#2E2E2E]/10" />
+            <div className="absolute bottom-12 left-12 w-8 h-8 border-b border-l border-[#2E2E2E]/10" />
+            <div className="absolute bottom-12 right-12 w-8 h-8 border-b border-r border-[#2E2E2E]/10" />
+          </motion.div>
         </motion.div>
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   );
 };
 
-export default LoadingScreen;
+export default LoadingScreen;

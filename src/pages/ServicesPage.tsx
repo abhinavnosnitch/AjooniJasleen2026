@@ -1,5 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import useScrollReveal from '../hooks/useScrollReveal';
 import { Link } from 'react-router-dom';
 import { Home, Briefcase, RefreshCw, Leaf, Hammer, Camera, Building } from 'lucide-react';
 import { useIntersectionObserver } from '../hooks/useIntersectionObserver';
@@ -23,7 +23,7 @@ const services = [
   {
     title: 'Commercial & Hospitality Design',
     description: 'We design spaces that move people and elevate brands — from contemporary offices to boutique restaurants and hotels. Every project is an experience, where design meets function and emotion meets efficiency.',
-    icon: <Briefcase className="w-8 h-8 text-luxury-gold" strokeWidth={1.5} />
+    icon: <Briefcase className="w-8 h-8 text- luxury-gold" strokeWidth={1.5} />
   },
   {
     title: 'Renovation & Adaptive Reuse',
@@ -48,12 +48,14 @@ const services = [
 ];
 
 const ServicesPage = () => {
-  const { elementRef: headerRef, isIntersecting: isHeaderVisible } = useIntersectionObserver({ threshold: 0.1 });
-  const { elementRef: introRef, isIntersecting: isIntroVisible } = useIntersectionObserver({ threshold: 0.1 });
+  const revealRef = useScrollReveal();
+
+  const { elementRef: headerRef, isIntersecting: isHeaderVisible } = useIntersectionObserver<HTMLDivElement>({ threshold: 0.1 });
+  const { elementRef: introRef, isIntersecting: isIntroVisible } = useIntersectionObserver<HTMLDivElement>({ threshold: 0.1 });
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-6xl mx-auto px-6 sm:px-8 lg:px-12 pt-32 lg:pt-40 pb-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-32 lg:pt-40 pb-24">
 
         <motion.div
           ref={headerRef}
@@ -82,40 +84,42 @@ const ServicesPage = () => {
           </p>
         </motion.div>
 
-        <div className="space-y-24 lg:space-y-32">
+        <div ref={revealRef} className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
           {services.map((service, index) => {
             return (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
-                className="max-w-4xl mx-auto group"
+                className="reveal-card group flex flex-col justify-between bg-luxury-ivory/30 p-8 lg:p-12 border border-transparent hover:border-luxury-gold/20 transition-all duration-700 hover:bg-white hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.08)] relative overflow-hidden"
               >
-                <div className="flex items-start">
-                  {/* Icon Container */}
+                {/* Architectural Numbering */}
+                <div className="absolute top-8 right-8 font-cormorant text-6xl italic font-light text-luxury-gold/5 group-hover:text-luxury-gold/10 transition-colors duration-500 pointer-events-none">
+                  {(index + 1).toString().padStart(2, '0')}
+                </div>
+
+                <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-luxury-gold/40 to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 ease-out" />
+                
+                <div className="relative z-10">
                   <motion.div
-                    className="flex-shrink-0 mr-6 mt-1"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="mb-10"
+                    whileHover={{ y: -5 }}
+                    transition={{ duration: 0.4, ease: 'easeOut' }}
                   >
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300 ease-out">
+                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm ring-1 ring-luxury-gold/10 group-hover:ring-luxury-gold/30 transition-all duration-500">
                       {service.icon}
                     </div>
                   </motion.div>
 
-                  {/* Content Container */}
-                  <div className="flex-1">
-                    <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-luxury-charcoal mb-4 tracking-wide group-hover:text-luxury-gold transition-colors duration-300 ease-out">
-                      {service.title}
-                    </h2>
-                    <p className="font-poppins text-base sm:text-lg leading-relaxed text-luxury-charcoal/70">
-                      {service.description}
-                    </p>
-                  </div>
+                  <h2 className="font-cormorant text-lg sm:text-xl md:text-2xl font-semibold text-luxury-charcoal mb-5 tracking-[0.05em] group-hover:text-luxury-gold transition-colors duration-500 ease-out uppercase">
+                    {service.title}
+                  </h2>
+                  
+                  <div className="w-12 h-[1px] bg-luxury-gold/30 mb-6 group-hover:w-24 transition-all duration-700" />
+
+                  <p className="font-poppins text-[13px] sm:text-sm leading-[1.8] text-luxury-charcoal/60 group-hover:text-luxury-charcoal/80 transition-colors duration-500">
+                    {service.description}
+                  </p>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
@@ -125,18 +129,18 @@ const ServicesPage = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: 'easeOut', delay: 0.2 }}
-          className="mt-32 text-center space-y-8"
+          className="mt-32 text-center"
         >
-          <div className="inline-flex gap-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <Link
-              to="/#projects"
-              className="font-poppins inline-block px-10 py-4 text-base tracking-wide border border-luxury-charcoal text-luxury-charcoal hover:bg-luxury-charcoal hover:text-white transition-all duration-300 ease-out"
+              to="/projects"
+              className="font-poppins inline-flex items-center justify-center px-12 py-5 text-sm tracking-widest font-medium uppercase bg-luxury-charcoal text-white hover:bg-luxury-gold transition-all duration-500 ease-out w-full sm:w-auto text-center shadow-lg hover:shadow-xl"
             >
               Explore Our Portfolio
             </Link>
             <Link
               to="/#contact"
-              className="font-poppins inline-block px-10 py-4 text-base tracking-wide border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-white transition-all duration-300 ease-out"
+              className="font-poppins inline-flex items-center justify-center px-12 py-5 text-sm tracking-widest font-medium uppercase border border-luxury-charcoal text-luxury-charcoal hover:bg-luxury-charcoal hover:text-white transition-all duration-500 ease-out w-full sm:w-auto text-center"
             >
               Begin Your Project
             </Link>

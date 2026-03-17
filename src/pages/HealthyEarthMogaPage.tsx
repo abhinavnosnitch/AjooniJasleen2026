@@ -1,9 +1,11 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import useScrollReveal from '../hooks/useScrollReveal';
 import LazyImage from '../components/LazyImage';
 import BackToHomeButton from '../components/BackToHomeButton';
 
 const HealthyEarthMogaPage = () => {
+  const revealRef = useScrollReveal();
+
   const images = [
     'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/Projects/Healthy%20Earth%20Moga/2.webp',
     'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/Projects/Healthy%20Earth%20Moga/3.webp',
@@ -33,24 +35,11 @@ const HealthyEarthMogaPage = () => {
             </p>
           </motion.div>
 
-          <motion.div
-            className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          <div ref={revealRef} className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
             {images.map((image, index) => (
-              <motion.div
+              <div
                 key={index}
-                className="group relative overflow-hidden rounded-lg shadow-lg break-inside-avoid mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.1 }}
-                transition={{
-                  duration: 0.6,
-                  ease: "easeOut",
-                  delay: index * 0.05
-                }}
+                className="reveal-card group relative overflow-hidden rounded-lg shadow-lg break-inside-avoid mb-6"
               >
                 <div className="relative w-full">
                   <LazyImage
@@ -62,21 +51,15 @@ const HealthyEarthMogaPage = () => {
                   <div className="absolute inset-0 bg-luxury-charcoal/0 group-hover:bg-luxury-charcoal/10 transition-all duration-500 ease-out" />
                   <div className="absolute inset-0 border-2 border-luxury-gold/0 group-hover:border-luxury-gold/40 transition-all duration-500 ease-out m-4 rounded-lg" />
                 </div>
-              </motion.div>
+              </div>
             ))}
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="mt-20 text-center max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+          <div className="reveal-card mt-20 text-center max-w-3xl mx-auto">
             <p className="font-cormorant text-xl sm:text-2xl text-luxury-charcoal/80 italic leading-relaxed">
               Fresh perspectives on healthy living through design that celebrates natural light, air flow, and earth tones.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 
 const WhyUsSection = () => {
@@ -18,7 +17,7 @@ const WhyUsSection = () => {
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
           >
-            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-luxury-charcoal mb-6">Why Choose Us</h2>
+            <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-luxury-gold mb-6">Why Choose Us</h2>
             <p className="font-poppins sm:text-large text-luxury-charcoal mb-6 leading-relaxed">
               Chandigarh isn't just a city, it's a statement. Every home, office, and building here has a rhythm. 
               We design spaces that don't just fit into the city, but stand out in it.

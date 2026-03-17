@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Instagram, Linkedin, MessageCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Phone, Mail, Instagram, Linkedin, MessageCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ContactSection = () => {
 
@@ -43,6 +43,23 @@ const ContactSection = () => {
     }
   ];
 
+  const [currentContactIndex, setCurrentContactIndex] = useState(0);
+
+  const handleNextContact = () => {
+    setCurrentContactIndex((prev) => (prev + 1) % contactInfo.length);
+  };
+
+  const handlePrevContact = () => {
+    setCurrentContactIndex((prev) => (prev - 1 + contactInfo.length) % contactInfo.length);
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNextContact();
+    }, 5000); // Frequency halved (5s instead of 2.5s)
+    return () => clearInterval(interval);
+  }, [contactInfo.length]);
+
   return (
     <div id="contact" className="overflow-x-hidden w-full bg-luxury-ivory py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,17 +70,15 @@ const ContactSection = () => {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <h2 className="font-cormorant text-3xl sm:text-4xl lg:text-5xl font-bold text-luxury-charcoal mb-4">
+          <h2 className="font-cormorant text-3xl sm:text-4xl lg:text-5xl font-bold text-luxury-gold mb-4">
             Contact Us
           </h2>
-          <p className="font-poppins text-luxury-charcoal/80 max-w-2xl mx-auto">
-            Choose your preferred way to get in touch with our team
-          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Desktop View */}
           <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            className="hidden lg:grid grid-cols-2 gap-4"
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -76,10 +91,6 @@ const ContactSection = () => {
                   target={info.link?.startsWith('http') ? '_blank' : undefined}
                   rel={info.link?.startsWith('http') ? 'noopener noreferrer' : undefined}
                   className="flex flex-col items-center justify-center bg-white border border-luxury-gold/20 hover:border-luxury-gold text-luxury-charcoal hover:bg-luxury-gold/5 p-6 rounded-lg transition-all duration-300 group shadow-sm hover:shadow-md"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.3 }}
-                  transition={{ duration: 0.4, ease: "easeOut", delay: index * 0.1 }}
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -89,32 +100,75 @@ const ContactSection = () => {
                   <h3 className="font-cormorant font-semibold text-lg text-luxury-charcoal mb-2 text-center">
                     {info.title}
                   </h3>
-                  {info.details.map((detail, detailIndex) => (
-                    <p
-                      key={detailIndex}
-                      className="font-poppins text-sm text-luxury-charcoal/70 text-center hover:text-luxury-gold transition-colors duration-300"
-                    >
-                      {detail}
-                    </p>
+                  {info.details.map((detail, dIdx) => (
+                    <p key={dIdx} className="font-poppins text-sm text-luxury-charcoal/70 text-center">{detail}</p>
                   ))}
                 </motion.a>
               ))}
           </motion.div>
 
+          {/* Mobile View Slider */}
+          <div className="lg:hidden relative">
+            <div className="flex justify-center items-center min-h-[200px] relative">
+              <AnimatePresence mode="wait">
+                <motion.a
+                  key={currentContactIndex}
+                  href={contactInfo[currentContactIndex].link}
+                  target={contactInfo[currentContactIndex].link?.startsWith('http') ? '_blank' : undefined}
+                  rel={contactInfo[currentContactIndex].link?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="flex flex-col items-center justify-center bg-white border border-luxury-gold/20 text-luxury-charcoal p-8 rounded-2xl shadow-xl w-[85vw]"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -50 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                >
+                  <div className="p-4 bg-luxury-gold/10 rounded-full mb-4">
+                    {contactInfo[currentContactIndex].icon}
+                  </div>
+                  <h3 className="font-cormorant font-bold text-2xl text-luxury-charcoal mb-2 text-center">
+                    {contactInfo[currentContactIndex].title}
+                  </h3>
+                  {contactInfo[currentContactIndex].details.map((detail, dIdx) => (
+                    <p key={dIdx} className="font-poppins text-sm tracking-wide text-luxury-charcoal/70 text-center">{detail}</p>
+                  ))}
+                </motion.a>
+              </AnimatePresence>
+
+              {/* Navigation Arrows */}
+              <button
+                onClick={handlePrevContact}
+                className="absolute left-1 top-1/2 -translate-y-1/2 z-10 p-4 rounded-full bg-white/30 backdrop-blur-sm text-luxury-gold border border-luxury-gold/10 transition-all duration-300 ease-out hover:bg-luxury-gold/20 hover:scale-105"
+                aria-label="Previous contact info"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={handleNextContact}
+                className="absolute right-1 top-1/2 -translate-y-1/2 z-10 p-4 rounded-full bg-white/30 backdrop-blur-sm text-luxury-gold border border-luxury-gold/10 transition-all duration-300 ease-out hover:bg-luxury-gold/20 hover:scale-105"
+                aria-label="Next contact info"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
           <motion.div
-            className="rounded-lg overflow-hidden shadow-lg"
+            className="rounded-2xl overflow-hidden shadow-2xl"
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
           >
             <iframe
-              src="https://www.openstreetmap.org/export/embed.html?bbox=76.70033%2C30.70615%2C76.70433%2C30.71015&layer=mapnik&marker=30.7081503%2C76.7023358"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3430.3645526946057!2d76.7023358!3d30.7081503!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390fef0c6747026b%3A0xf496e44c1ce8453c!2sAadh%20Towers%20-%20Office%20space%20for%20rent%20in%20mohali%2Fplug%20and%20play%20office%2F%20coworking%20%2F%20furnished%20office%20space%20in%20mohali!5e0!3m2!1sen!2sin!4v1773746759175!5m2!1sen!2sin"
               width="100%"
               height="100%"
-              style={{ border: 0, minHeight: '400px' }}
+              style={{ border: 0, minHeight: '300px' }}
+              allowFullScreen
               loading="lazy"
-              title="Office Location - E37, Aadh Towers, Phase-8 Mohali Punjab India"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Office Location"
             ></iframe>
           </motion.div>
         </div>

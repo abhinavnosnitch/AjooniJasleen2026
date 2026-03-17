@@ -1,7 +1,4 @@
-import React from 'react';
 import HeroSection from './Home';
-import CallToActionMobile from '../components/CallToActionMobile';
-import CallToActionSection from '../components/CallToActionSection';
 import WhatWeDoSection from '../components/WhatWeDoSection';
 import WhyUsSection from '../components/WhyUsSection';
 import ServicesSection from '../components/ServicesSection';
@@ -16,15 +13,6 @@ const UnifiedHomepage = () => {
       {/* Hero Section */}
       <HeroSection />
 
-      {/* Mobile Hero Heading */}
-      <div className="md:hidden">
-        <CallToActionMobile />
-      </div>
-
-      {/* Call to Action Section */}
-      <div className="bg-white overflow-x-hidden w-full">
-        <CallToActionSection />
-      </div>
 
       {/* What We Do Section */}
       <div className="py-12 bg-luxury-ivory overflow-x-hidden w-full">

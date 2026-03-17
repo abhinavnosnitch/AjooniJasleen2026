@@ -1,12 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Calendar,
   MapPin,
   Clock,
-  Users,
-  Award,
-  Heart,
   Palette,
   Hammer,
   Music,
@@ -17,464 +14,293 @@ import SectionDivider from '../components/SectionDivider';
 
 const ShiddatPage = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
 
   const slides = [
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0009T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0041T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0051T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0110T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0120T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0128T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0150T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0168T01%20(2).JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0168T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0179T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0206T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0236T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0254T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0325T01.JPG',
-      title: 'Shiddat Event'
-    },
-    {
-      image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0364T01.JPG',
-      title: 'Shiddat Event'
-    }
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0009T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0041T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0051T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0110T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0120T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0128T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0150T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0168T01%20(2).JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0168T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0179T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0206T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0236T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0254T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0325T01.JPG', title: 'Shiddat Event' },
+    { image: 'https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/ShiddatSlide/C0364T01.JPG', title: 'Shiddat Event' }
   ];
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length);
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-  };
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    const slideTimer = setInterval(() => {
-      nextSlide();
-    }, 5000);
-
+    const slideTimer = setInterval(nextSlide, 5000);
     return () => {
-      clearTimeout(timer);
       clearInterval(slideTimer);
     };
   }, []);
 
   const eventHighlights = [
-    {
-      title: 'Showcase',
-      description: 'Artifacts by Local Artisans',
-      icon: <Palette className="w-8 h-8 text-luxury-gold" />
-    },
-    {
-      title: 'Workshop Pavilion',
-      description: 'Interactive Live Demonstrations',
-      icon: <Hammer className="w-8 h-8 text-luxury-gold" />
-    },
-    {
-      title: 'Open-Air',
-      description: 'Cultural & Literary Performance',
-      icon: <Music className="w-8 h-8 text-luxury-gold" />
-    }
+    { title: 'Showcase', description: 'Curated selection of artifacts created by local artisans and visionaries.', icon: <Palette className="w-6 h-6" /> },
+    { title: 'Workshop Pavilion', description: 'Interactive live demonstrations pushing the boundaries of traditional craft.', icon: <Hammer className="w-6 h-6" /> },
+    { title: 'Open-Air performances', description: 'Cultural and literary performances under the Mohali sky.', icon: <Music className="w-6 h-6" /> }
   ];
 
   return (
-    <div className="min-h-screen bg-luxury-ivory noise-texture overflow-x-hidden w-full">
-      <section className="pt-32 pb-20 relative bg-cover bg-center bg-no-repeat" style={{backgroundImage: 'url(https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/Shiddat/Background/DSC_7357_copy_1512x1006.jpg)'}}>
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/40"></div>
-        
-        <motion.div
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+    <div className="min-h-screen bg-luxury-ivory overflow-x-hidden w-full">
+      {/* Hero Section - High-Impact Architectural Reveal */}
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 z-0"
+          initial={{ scale: 1.15 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 15, ease: "linear" }}
         >
+          <div 
+            className="w-full h-full bg-cover bg-center grayscale-[30%]" 
+            style={{backgroundImage: 'url(https://cdn.jsdelivr.net/gh/abhinavnosnitch/aj-website-assets/Website%20assets/Shiddat/Background/DSC_7357_copy_1512x1006.jpg)'}}
+          />
+          <div className="absolute inset-0 bg-black/40" />
+        </motion.div>
+        
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
           <motion.div
-            className="inline-flex items-center justify-center mb-4"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          >
-            <Heart className="w-8 h-8 text-luxury-gold mr-4" />
-          </motion.div>
-
-          <h1 className="font-cormorant italic text-5xl sm:text-6xl lg:text-7xl font-medium text-white mb-1">
-            Shiddat
-          </h1>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+            transition={{ duration: 1.5, ease: [0.19, 1, 0.22, 1] }}
           >
-            <h2 className="font-cormorant text-4xl sm:text-5xl lg:text-6xl italic font-semibolt text-luxury-gold mb-6">
-              Art <span className="font-cormorant font-semibold text-2xl not-italic">EXHIBIT</span>
-            </h2>
-          </motion.div>
+            <span className="font-poppins text-[10px] md:text-xs tracking-[0.6em] text-luxury-gold uppercase block mb-8 font-medium">
+              An Initiative by Ar. Jasleen
+            </span>
+            
+            <h1 className="font-cormorant italic text-8xl md:text-[12rem] font-light text-white leading-none mb-4 lowercase">
+              Shiddat
+            </h1>
 
-          <motion.div
-            className="inline-block bg-luxury-gold px-6 py-3 rounded-lg shadow-lg mb-12"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
-          >
-            <p className="font-cormorant text-base sm:text-xl text-white font-normal drop-shadow-md">
-              15<sup>th</sup>-16<sup>th</sup> MARCH 2025
-            </p>
+            <div className="flex items-center justify-center space-x-6 mb-16">
+              <div className="h-[1px] w-12 bg-white/40" />
+              <h2 className="font-cormorant text-2xl md:text-3xl text-white tracking-[0.1em] font-light uppercase italic">
+                Art <span className="not-italic font-bold text-luxury-gold">Exhibit</span> 3.0
+              </h2>
+              <div className="h-[1px] w-12 bg-white/40" />
+            </div>
+
+            {/* Premium Date Badge */}
+            <div className="relative inline-block px-12 py-5 border border-white/10 bg-white/5 backdrop-blur-md overflow-hidden group">
+              <motion.div 
+                className="absolute inset-0 bg-luxury-gold -translate-y-full group-hover:translate-y-0 transition-transform duration-700 ease-in-out"
+                style={{ zIndex: -1 }}
+              />
+              <p className="font-cormorant text-2xl text-white group-hover:text-black transition-colors duration-500 tracking-[0.2em]">
+                20 MARCH — 22 MARCH <span className="text-sm opacity-60">2026</span>
+              </p>
+            </div>
           </motion.div>
+        </div>
+
+        {/* Scroll Hint */}
+        <motion.div 
+          className="absolute bottom-12 flex flex-col items-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+        >
+          <span className="font-poppins text-[9px] uppercase tracking-[0.4em] text-white/40 mb-4 italic">Begin Discovery</span>
+          <div className="w-px h-16 bg-gradient-to-b from-luxury-gold to-transparent" />
         </motion.div>
       </section>
 
-      <section className="py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {/* Highlights - Editorial Numbered List */}
+      <section className="py-32 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-20 md:gap-12">
             {eventHighlights.map((highlight, index) => (
               <motion.div
                 key={highlight.title}
-                className="text-center"
-                initial={{ opacity: 0, y: 30 }}
+                className="group relative"
+                initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: index * 0.2 }}
               >
-                <div className="flex justify-center mb-4">
-                  <div className="w-20 h-20 bg-luxury-ivory rounded-full flex items-center justify-center shadow-md">
+                <div className="absolute -top-12 -left-4 font-cormorant text-8xl italic font-light text-luxury-gold/[0.03] pointer-events-none group-hover:text-luxury-gold/[0.08] transition-all duration-1000">
+                  {index + 1}
+                </div>
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-luxury-ivory rounded-full flex items-center justify-center text-luxury-gold mb-8 group-hover:bg-luxury-gold group-hover:text-white transition-all duration-700 shadow-sm shadow-luxury-gold/10">
                     {highlight.icon}
                   </div>
+                  <h3 className="font-cormorant text-2xl font-semibold text-luxury-charcoal mb-4 uppercase tracking-widest">{highlight.title}</h3>
+                  <div className="w-10 h-px bg-luxury-gold mb-6 group-hover:w-full transition-all duration-1000 ease-out" />
+                  <p className="font-poppins text-sm leading-[2] text-luxury-charcoal/60 group-hover:text-luxury-charcoal/80 transition-colors duration-500 italic">
+                    {highlight.description}
+                  </p>
                 </div>
-                <h3 className="font-cormorant text-2xl font-bold text-luxury-charcoal mb-2 uppercase">
-                  {highlight.title}
-                </h3>
-                <p className="font-poppins text-luxury-charcoal/80 text-sm leading-relaxed">
-                  {highlight.description}
-                </p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Event Details with Slideshow Section */}
-      <section className="py-20 bg-luxury-ivory">
-        <motion.div 
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Event Details - Left Side */}
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            >
-              <h2 className="font-cormorant text-4xl sm:text-5xl font-bold text-luxury-charcoal mb-8">Event Details</h2>
+      {/* Exhibition Space - Integrated Details & Gallery */}
+      <section className="py-32 bg-luxury-ivory relative overflow-hidden">
+        {/* Decorative architectural circle */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] border border-luxury-gold/5 rounded-full translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            {/* Left: Event Manifesto & Logistics */}
+            <div className="lg:col-span-5">
+              <span className="font-poppins text-[10px] tracking-[0.5em] text-luxury-gold uppercase block mb-6">The Exhibition Space</span>
+              <h2 className="font-cormorant text-5xl md:text-6xl font-light text-luxury-charcoal mb-12 leading-tight">
+                Craftsmanship <br />
+                <span className="italic italic-gold italic">in Dialogue</span>
+              </h2>
               
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <Clock className="w-6 h-6 text-luxury-gold flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-cormorant text-xl font-semibold text-luxury-charcoal mb-1">Timings</h3>
-                    <p className="font-poppins text-luxury-charcoal/80">
-                      <span className="text-luxury-gold font-semibold">11:00 am to 7:00 pm</span>
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <MapPin className="w-6 h-6 text-luxury-gold flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-cormorant text-xl font-semibold text-luxury-charcoal mb-1">Venue</h3>
-                    <p className="font-poppins text-luxury-charcoal/80">
-                      Aadh Towers, E-37, Phase-B, Industrial Area, S.A.S Nagar, Mohali, Punjab, 160071
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <Calendar className="w-6 h-6 text-luxury-gold flex-shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-cormorant text-xl font-semibold text-luxury-charcoal mb-1">Dates</h3>
-                    <p className="font-poppins text-luxury-charcoal/80">
-                      15th - 16th March 2025
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Photo Slideshow - Right Side */}
-            <motion.div
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
-              className="relative"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-xl touch-pan-y">
-                {/* Loading indicator */}
-                {isLoading && (
-                  <div className="absolute inset-0 bg-gray-200 flex items-center justify-center z-10">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-luxury-gold"></div>
-                  </div>
-                )}
-
-                {slides.map((slide, index) => (
-                  <div
-                    key={index}
-                    className={`absolute inset-0 transition-opacity duration-1000 ${
-                      index === currentSlide ? 'opacity-100' : 'opacity-0'
-                    }`}
+              <div className="space-y-12">
+                {[
+                  { icon: <Clock />, label: 'Exhibition Hours', value: '11:00 AM — 07:00 PM' },
+                  { icon: <MapPin />, label: 'Venue Location', value: 'Aadh Towers, E37, Phase-8, Mohali' },
+                  { icon: <Calendar />, label: 'Exhibition Dates', value: '20th to 22nd March 2026' }
+                ].map((item, i) => (
+                  <motion.div 
+                    key={i}
+                    className="flex items-start space-x-6 group"
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
                   >
-                    <img
-                      src={slide.image}
-                      alt={slide.title}
-                      className="w-full h-full object-cover"
-                      loading={index === 0 ? "eager" : "lazy"}
-                    />
-                    <div className="absolute inset-0 bg-black/10"></div>
-                  </div>
+                    <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center border border-luxury-gold/20 text-luxury-gold rounded-full group-hover:bg-luxury-gold group-hover:text-white transition-all duration-500">
+                      {item.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-poppins text-[10px] uppercase tracking-[0.2em] text-luxury-charcoal/40 mb-1">{item.label}</h4>
+                      <p className="font-cormorant text-xl text-luxury-charcoal tracking-wide">{item.value}</p>
+                    </div>
+                  </motion.div>
                 ))}
-
-                {/* Slide Navigation */}
-                <button
-                  onClick={prevSlide}
-                  className="absolute left-2 sm:left-6 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white transition-colors duration-300 z-10 p-2 touch-manipulation"
-                  aria-label="Previous slide"
-                >
-                  <ChevronLeft size={32} className="sm:w-12 sm:h-12" />
-                </button>
-                
-                <button
-                  onClick={nextSlide}
-                  className="absolute right-2 sm:right-6 top-1/2 transform -translate-y-1/2 text-white/80 hover:text-white transition-colors duration-300 z-10 p-2 touch-manipulation"
-                  aria-label="Next slide"
-                >
-                  <ChevronRight size={32} className="sm:w-12 sm:h-12" />
-                </button>
               </div>
-            </motion.div>
+            </div>
+
+            {/* Right: Immersive Slideshow */}
+            <div className="lg:col-span-7 relative group">
+              <div className="aspect-[16/10] overflow-hidden rounded-sm shadow-2xl relative">
+                <AnimatePresence mode="wait">
+                  <motion.img
+                    key={currentSlide}
+                    src={slides[currentSlide].image}
+                    alt="Exhibition View"
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 1.2, ease: "easeOut" }}
+                    className="w-full h-full object-cover"
+                  />
+                </AnimatePresence>
+                <div className="absolute inset-0 bg-black/5" />
+                
+                {/* Navigation Overlay */}
+                <div className="absolute bottom-8 right-8 flex space-x-4">
+                  <button onClick={prevSlide} className="w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-luxury-gold transition-all duration-500">
+                    <ChevronLeft size={20} />
+                  </button>
+                  <button onClick={nextSlide} className="w-12 h-12 bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-luxury-gold transition-all duration-500">
+                    <ChevronRight size={20} />
+                  </button>
+                </div>
+              </div>
+              {/* Image Counter */}
+              <div className="absolute -bottom-8 left-0 font-poppins text-[10px] tracking-[0.4em] text-luxury-charcoal/40 uppercase">
+                Image {currentSlide + 1} <span className="mx-2">/</span> {slides.length}
+              </div>
+            </div>
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      <motion.section
-        className="py-20 bg-white"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-6">
-            <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-luxury-charcoal">
-              About Shiddat
-            </h2>
-          </div>
-
-          <motion.p
-            className="font-poppins font-light text-lg text-luxury-charcoal italic leading-relaxed max-w-3xl mx-auto mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          >
-            Driven by a belief in the power of collaboration, Ar. Jasleen founded Shiddat in 2024. It is her personal initiative to create a dedicated platform for professionals from the architecture, construction, and art communities to connect, share knowledge, and inspire one another. Now an annual event, Shiddat reflects her commitment to strengthening the industry from within.
-          </motion.p>
-
+      {/* About Shiddat - Manifesto Style */}
+      <section className="py-40 bg-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }}
           >
-            <div className="bg-luxury-ivory p-6 rounded-lg shadow-md">
-              <Calendar className="w-8 h-8 text-luxury-gold mx-auto mb-4" />
-              <h3 className="font-cormorant text-xl font-bold text-luxury-charcoal mb-2">Annual Event</h3>
-              <p className="font-poppins text-luxury-charcoal/80 text-sm">
-                A yearly gathering that brings together creative professionals
-              </p>
-            </div>
-
-            <div className="bg-luxury-ivory p-6 rounded-lg shadow-md">
-              <Users className="w-8 h-8 text-luxury-gold mx-auto mb-4" />
-              <h3 className="font-cormorant text-xl font-bold text-luxury-charcoal mb-2">Community Focus</h3>
-              <p className="font-poppins text-luxury-charcoal/80 text-sm">
-                Connecting architecture, construction, and art professionals
-              </p>
-            </div>
-
-            <div className="bg-luxury-ivory p-6 rounded-lg shadow-md">
-              <Award className="w-8 h-8 text-luxury-gold mx-auto mb-4" />
-              <h3 className="font-cormorant text-xl font-bold text-luxury-charcoal mb-2">Industry Impact</h3>
-              <p className="font-poppins text-luxury-charcoal/80 text-sm">
-                Strengthening the creative industry through collaboration
-              </p>
-            </div>
+            <h2 className="font-cormorant text-4xl md:text-5xl font-light text-luxury-charcoal mb-12 italic tracking-wide">
+              The Manifesto of Shiddat
+            </h2>
+            <p className="font-poppins text-lg md:text-xl text-luxury-charcoal/70 leading-[2] font-light italic mb-16">
+              "Driven by a belief in the power of collaboration, Ar. Jasleen founded Shiddat in 2024. It is her personal initiative to create a dedicated platform for professionals from the architecture, construction, and art communities to connect, share knowledge, and inspire one another."
+            </p>
+            <div className="w-[1px] h-20 bg-luxury-gold/40 mx-auto" />
           </motion.div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        className="py-20 bg-luxury-ivory"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="font-cormorant text-3xl sm:text-4xl font-bold text-luxury-charcoal mb-8 text-center">
-            SHIDDAT TIMELINE
-          </h2>
+      {/* Timeline Section - Vertical Refinement */}
+      <section className="py-32 bg-luxury-ivory relative">
+        <div className="max-w-5xl mx-auto px-4">
+          <div className="text-center mb-24">
+            <span className="font-poppins text-[10px] tracking-[0.5em] text-luxury-gold uppercase block mb-4">Journey of Intent</span>
+            <h2 className="font-cormorant text-5xl font-light text-luxury-charcoal uppercase tracking-widest">The Evolution</h2>
+          </div>
 
-          <div className="space-y-8">
-            <motion.div
-              className="flex items-start space-x-6"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            >
-              <div className="flex-shrink-0 w-20 h-20 bg-luxury-gold rounded-full flex items-center justify-center shadow-lg">
-                <span className="font-cormorant text-white font-normal text-lg">2024</span>
-              </div>
+          <div className="relative">
+            {/* Central line */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-luxury-gold/20 hidden md:block" />
+            
+            <div className="space-y-32">
+              {[
+                { year: '2024', title: 'Shiddat 1.0', desc: 'The Genesis. A flagship gathering for the North Indian creative community.' },
+                { year: '2025', title: 'Shiddat 2.0', desc: 'Scaling the vision. Expanding reach while embarking on landmark architecture.' },
+                { year: '2026', title: 'Shiddat 3.0', desc: 'The Immersive Exhibit. A celebration of material, form, and cultural dialogue.' }
+              ].map((milestone, idx) => (
+                <motion.div 
+                  key={idx}
+                  className={`relative flex items-center justify-center md:justify-between flex-col md:flex-row ${idx % 2 === 0 ? '' : 'md:flex-row-reverse'}`}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                >
+                  <div className="w-full md:w-[45%] bg-white p-12 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.05)] border border-luxury-gold/10 group hover:border-luxury-gold/40 transition-all duration-700">
+                    <span className="font-cormorant text-luxury-gold text-sm tracking-widest font-bold mb-4 block uppercase italic">Edition {idx + 1}.0</span>
+                    <h3 className="font-cormorant text-3xl font-light text-luxury-charcoal mb-6 uppercase tracking-wider">{milestone.title}</h3>
+                    <p className="font-poppins text-sm text-luxury-charcoal/60 leading-relaxed font-light">{milestone.desc}</p>
+                  </div>
 
-              <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center mb-3">
-                  <Users className="w-6 h-6 text-luxury-gold" />
-                  <h3 className="font-cormorant text-xl font-bold text-luxury-charcoal ml-3">
-                    Shiddat 1.0
-                  </h3>
-                </div>
-                <p className="font-poppins text-luxury-charcoal/80 leading-relaxed">
-                  Launched as a flagship event for the creative community, bringing together professionals from architecture, construction, and art.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="flex items-start space-x-6"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-            >
-              <div className="flex-shrink-0 w-20 h-20 bg-luxury-gold rounded-full flex items-center justify-center shadow-lg">
-                <span className="font-cormorant text-white font-normal text-lg">2025</span>
-              </div>
-
-              <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center mb-3">
-                  <Award className="w-6 h-6 text-luxury-gold" />
-                  <h3 className="font-cormorant text-xl font-bold text-luxury-charcoal ml-3">
-                    Shiddat 2.0
-                  </h3>
-                </div>
-                <p className="font-poppins text-luxury-charcoal/80 leading-relaxed">
-                  The second successful edition, expanding the reach and impact while the firm embarked on its first township project.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              className="flex items-start space-x-6"
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            >
-              <div className="flex-shrink-0 w-20 h-20 bg-luxury-gold rounded-full flex items-center justify-center shadow-lg">
-                <span className="font-cormorant text-white font-normal text-lg">2026</span>
-              </div>
-
-              <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
-                <div className="flex items-center mb-3">
-                  <Heart className="w-6 h-6 text-luxury-gold" />
-                  <h3 className="font-cormorant text-xl font-bold text-luxury-charcoal ml-3">
-                    Shiddat 3.0 - An Art Exhibit
-                  </h3>
-                </div>
-                <p className="font-poppins text-luxury-charcoal/80 leading-relaxed">
-                  Continuing the commitment to industry building with an immersive art exhibit featuring architectural materials, interactive workshops, and cultural performances.
-                </p>
-              </div>
-            </motion.div>
+                  {/* Marker */}
+                  <div className="hidden md:absolute md:left-1/2 md:-translate-x-1/2 md:flex w-16 h-16 rounded-full bg-[#1A1A1A] items-center justify-center text-white border-[6px] border-luxury-ivory z-10 shadow-xl group-hover:bg-luxury-gold transition-colors duration-500">
+                    <span className="font-cormorant text-xs font-bold">{milestone.year}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       <SectionDivider />
 
-      <motion.section
-        className="py-20 bg-luxury-ivory"
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.p
-            className="font-cormorant text-2xl sm:text-3xl lg:text-4xl text-luxury-charcoal/80 italic leading-relaxed"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+      {/* Closing Quote */}
+      <section className="py-40 bg-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.5 }}
           >
-            "Building connections, celebrating craftsmanship, and strengthening the creative community —
-            one event at a time."
-          </motion.p>
+            <h2 className="font-cormorant text-3xl md:text-5xl text-luxury-charcoal/80 italic font-light leading-relaxed">
+              "Building connections, celebrating craftsmanship, and strengthening the creative community — one event at a time."
+            </h2>
+          </motion.div>
         </div>
-      </motion.section>
+      </section>
     </div>
   );
 };

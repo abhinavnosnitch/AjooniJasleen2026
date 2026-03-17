@@ -1,9 +1,12 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import useScrollReveal from '../hooks/useScrollReveal';
 import { Volume2, VolumeX } from 'lucide-react';
 import BackToHomeButton from '../components/BackToHomeButton';
 
 const PubPatialaPage = () => {
+  const revealRef = useScrollReveal();
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isMuted, setIsMuted] = useState(true);
 
@@ -34,12 +37,7 @@ const PubPatialaPage = () => {
             </p>
           </motion.div>
 
-          <motion.div
-            className="max-w-5xl mx-auto"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
+          <div className="max-w-5xl mx-auto">
             <div className="relative overflow-hidden rounded-lg shadow-2xl bg-luxury-charcoal">
               <video
                 ref={videoRef}
@@ -73,19 +71,13 @@ const PubPatialaPage = () => {
                 )}
               </button>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            className="mt-20 text-center max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-          >
+          <div className="reveal-card mt-20 text-center max-w-3xl mx-auto">
             <p className="font-cormorant text-xl sm:text-2xl text-luxury-charcoal/80 italic leading-relaxed">
               An immersive entertainment destination in Patiala that blends vibrant atmosphere with sophisticated design.
             </p>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>
